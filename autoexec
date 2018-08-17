@@ -13,6 +13,13 @@ if [ ! "$BC_C9_AUTOEXEC" = 2  ]; then
     export BC_C9_AUTOEXEC=2
     
     echo "$BC_C9_NAME: Runing BreatheCode Autoexec #$BC_C9_AUTOEXEC"
+    
+    source ~/.nvm/nvm.sh
+    read version _ <<< $(nvm current)
+    if [[ "$version" == *"v6"* ]]; then
+        nvm i 8
+        echo "$BC_C9_NAME: Node was upgraded to version 8"
+    fi
 fi
 
 # Functions
@@ -22,10 +29,4 @@ randomStringAlphaNum() { cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c ${1:-32
 # ~/workspace/bin
 if [ -d "$HOME/workspace/bin" ] && ! pathContainsDirectory "$HOME/workspace/bin"; then
     export PATH="$PATH:$HOME/workspace/bin"
-fi
-
-read version _ <<< $(nvm current)
-if [[ "$version" == *"v6"* ]]; then
-    nvm i 8
-    echo "$BC_C9_NAME: Node was upgraded to version 8"
 fi

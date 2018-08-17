@@ -27,7 +27,7 @@
           onclick: () => self.newTab('https://student.breatheco.de')
         }), 100, plugin);
 
-        menus.addItemByPath(menuCaption + "/Assets", new MenuItem({
+        menus.addItemByPath(menuCaption + "/Browse Assets", new MenuItem({
           onclick: () => self.newTab('https://breatheco.de/en/assets/')
         }), 100, plugin);
 
