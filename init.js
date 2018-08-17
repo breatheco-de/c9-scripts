@@ -1,5 +1,6 @@
 ({
     name: 'c9Scripts',
+    debug: true,
     init: function() {
         this.addMenus(this);
         this.doInstallOrUpgradeIfHostedWorkspace(this);
@@ -41,7 +42,7 @@
             return '/home/ubuntu/c9-scripts';
         },
         getRemote: function(self) {
-            return 'git@github.com:fnkr/c9-scripts.git';
+            return 'https://github.com/breatheco-de/c9-scripts.git';
         }
     },
     console: {
@@ -56,7 +57,8 @@
         }
     },
     notification: {
-        error: (self, err) => services['dialog.error'].show(err)
+        error: (self, err) => services['dialog.error'].show(err),
+        info: (self, msg) => services['dialog.alert'].show(msg)
     },
     onError: function(self, err) {
         self.console.error(self, err);
@@ -138,10 +140,11 @@
 
         services.proc.execFile('bash', {
             args: ['./install'], cwd: self.git.getClone()
-        }, (err) => self.doInstallCallback(self, err));
+        }, (err, stdout) => self.doInstallCallback(self, err, stdout));
     },
-    doInstallCallback: function(self, err) {
+    doInstallCallback: function(self, err, stdout) {
         self.console.log(self, 'doInstallCallback');
+        self.console.log(self, stdout);
 
         if (err) {
             return self.onError(self, err);

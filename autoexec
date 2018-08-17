@@ -11,6 +11,8 @@ if [ ! "$BC_C9_AUTOEXEC" = 2  ]; then
 
     # Increment this number each time you change something inside of this 'if'-block
     export BC_C9_AUTOEXEC=2
+    
+    echo "$BC_C9_NAME: exported the environment variables, attempt #$BC_C9_AUTOEXEC"
 fi
 
 # Functions
