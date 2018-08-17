@@ -33,8 +33,6 @@ else
     echo "$BC_C9_NAME: install: info: ~/.gitconfig github.com extension already installed. skipping."
 fi
 
-nvm i 8
-
 if ! [ -z "$INSTALLED" ]; then
     printf "Installation finished.\nRun \"source \"$BC_C9_LIBRARY/autoexec\"\" or start a new terminal.\n"
 fi
