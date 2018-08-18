@@ -20,22 +20,20 @@
         // Set the top-level menu caption.
         menus.setRootMenu(menuCaption, 900, plugin);
 
-        // Add a Saturday menu command to the menu.
-        // When the user chooses this command, run the chooseWeekendDay function,
-        // passing in the string Saturday.
-        menus.addItemByPath(menuCaption + "/Student Platform", new MenuItem({
-          onclick: () => self.newTab('https://student.breatheco.de')
-        }), 100, plugin);
-
-        menus.addItemByPath(menuCaption + "/Browse Assets", new MenuItem({
-          onclick: () => self.newTab('https://breatheco.de/en/assets/')
-        }), 100, plugin);
-
+        this.getMenuFromScripts(self, (bcMenu) => {
+            //Adding menu options to the root Breathe Code Menu
+            bcMenu.items.forEach((item) => {
+                console.log("addItemByPath", item);
+                menus.addItemByPath(menuCaption + item.path, new MenuItem(item.actions), 100, plugin);
+            });
+        });
     },
-    newTab(url){
-        // services["dialog.alert"].show("Results", "Which day?",
-        //     "You chose " + day + ".");
-        window.open(url);
+    getMenuFromScripts: (self, callback) => {
+        self.console.log(self, 'getMenuFromScripts');
+        services.fs.readFile("~/c9-scripts/menu.js", (err, data) => {
+            if (err) self.onError(self, err);
+            callback(new Function(data)());
+        });
     },
     git: {
         getClone: function(self) {
@@ -144,7 +142,7 @@
     },
     doInstallCallback: function(self, err, stdout) {
         self.console.log(self, 'doInstallCallback');
-        self.console.log(self, stdout);
+        //self.console.log(self, stdout);
 
         if (err) {
             return self.onError(self, err);
