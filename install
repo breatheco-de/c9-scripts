@@ -27,11 +27,13 @@ else
     INSTALLED=1
 fi
 
-if [ -z "$(git config --global 'url.git@github.com:.insteadOf')" ]; then
-    git config --global 'url.git@github.com:.insteadOf' 'https://github.com/'
+if git config core.filemode; then
+    git config core.filemode false
+    git config --global core.fileMode false
+    echo "Removing git fileMode check"
     INSTALLED=1
 else
-    echo "$BC_C9_NAME: install: info: ~/.gitconfig github.com extension already installed. skipping."
+    echo "$BC_C9_NAME: git config core.filemode was already false. skipping."
 fi
 
 if ! [ -z "$INSTALLED" ]; then
