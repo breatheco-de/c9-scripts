@@ -19,6 +19,12 @@ return {
             }
         },
         {
+            path: "/Slack Channel",
+            actions: {
+                onclick: () => actions.openTab('https://4geeksacademy.slack.com/messages')
+            }
+        },
+        {
             path: "/~",
             type: "divider"
         },
