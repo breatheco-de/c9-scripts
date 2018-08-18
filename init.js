@@ -26,7 +26,8 @@
                     const addMenuLevel = (parentPath, items) => {
                         items.forEach((item) => {
                             console.log("addItemByPath", item);
-                            menus.addItemByPath(parentPath + item.path, new MenuItem(item.actions), 100, plugin);
+                            const type = (item.type == 'divider') ? new Divider() : new MenuItem(item.actions || {});
+                            menus.addItemByPath(parentPath + item.path, type, 100, plugin);
                             if(Array.isArray(item.items) && item.items.length>0) 
                                 addMenuLevel(parentPath + item.path, item.items);
                         });

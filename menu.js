@@ -19,6 +19,10 @@ return {
             }
         },
         {
+            path: "/~",
+            type: "divider"
+        },
+        {
             path: "/Boilerplates",
             items: [
                 {
