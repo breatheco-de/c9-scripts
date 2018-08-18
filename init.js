@@ -2,7 +2,6 @@
     name: 'c9Scripts',
     debug: true,
     init: function() {
-        this.addMenus(this);
         this.doInstallOrUpgradeIfHostedWorkspace(this);
     },
     addMenus(self){
@@ -20,19 +19,37 @@
         // Set the top-level menu caption.
         menus.setRootMenu(menuCaption, 900, plugin);
 
-        this.getMenuFromScripts(self, (bcMenu) => {
-            //Adding menu options to the root Breathe Code Menu
-            bcMenu.items.forEach((item) => {
-                console.log("addItemByPath", item);
-                menus.addItemByPath(menuCaption + item.path, new MenuItem(item.actions), 100, plugin);
-            });
+        return new Promise((resolve, reject) => {
+            this.getMenuFromScripts(self)
+                .then((bcMenu) => {
+                    //Adding menu options to the root Breathe Code Menu
+                    const addMenuLevel = (parentPath, items) => {
+                        items.forEach((item) => {
+                            console.log("addItemByPath", item);
+                            menus.addItemByPath(parentPath + item.path, new MenuItem(item.actions), 100, plugin);
+                            if(Array.isArray(item.items) && item.items.length>0) 
+                                addMenuLevel(parentPath + item.path, item.items);
+                        });
+                    }
+                    addMenuLevel(menuCaption, bcMenu.items);
+                    
+                    resolve();
+                });
         });
     },
-    getMenuFromScripts: (self, callback) => {
+    getMenuFromScripts: (self) => {
         self.console.log(self, 'getMenuFromScripts');
-        services.fs.readFile("~/c9-scripts/menu.js", (err, data) => {
-            if (err) self.onError(self, err);
-            callback(new Function(data)());
+        
+        return new Promise((resolve, reject) => {
+            services.fs.readFile("~/c9-scripts/menu.js", (err, data) => {
+                if (err){
+                    self.onError(self, err);
+                    reject();
+                } 
+                else{
+                    resolve(new Function(data)());
+                }
+            });
         });
     },
     git: {
@@ -143,9 +160,11 @@
     doInstallCallback: function(self, err, stdout) {
         self.console.log(self, 'doInstallCallback');
         //self.console.log(self, stdout);
-
         if (err) {
             return self.onError(self, err);
         }
-    }
+        
+        this.addMenus(self);
+    },
+    test: function(){ }
 }).init();

@@ -17,6 +17,29 @@ return {
             actions: {
                 onclick: () => actions.openTab('https://breatheco.de/en/assets/')
             }
+        },
+        {
+            path: "/Boilerplates",
+            items: [
+                {
+                    path: "/vanilla-js",
+                    actions: {
+                        onclick: () => actions.openTab('https://github.com/4GeeksAcademy/vanillajs-hello')
+                    }
+                },
+                {
+                    path: "/react",
+                    actions: {
+                        onclick: () => actions.openTab('https://github.com/4GeeksAcademy/react-hello')
+                    }
+                },
+                {
+                    path: "/react-flux",
+                    actions: {
+                        onclick: () => actions.openTab('https://github.com/4GeeksAcademy/react-hello-flux')
+                    }
+                }
+            ]
         }
     ]
 };
