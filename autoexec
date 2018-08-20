@@ -18,6 +18,7 @@ if [ ! "$BC_C9_AUTOEXEC" = 2  ]; then
     read version _ <<< $(nvm current)
     if [[ "$version" == *"v6"* ]]; then
         nvm i 8
+        nvm alias default 8
         echo "$BC_C9_NAME: Node was upgraded to version 8"
     fi
 fi
