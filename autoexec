@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ ! "$BC_C9_AUTOEXEC" = 2  ]; then
+if [ ! "$BC_C9_AUTOEXEC" = 3  ]; then
     export BC_C9_NAME="breathecode/c9-scripts"
     export BC_C9_LIBRARY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
     export BC_C9_WORKSPACE="$HOME/workspace"
@@ -10,7 +10,7 @@ if [ ! "$BC_C9_AUTOEXEC" = 2  ]; then
     export TERM=screen
 
     # Increment this number each time you change something inside of this 'if'-block
-    export BC_C9_AUTOEXEC=2
+    export BC_C9_AUTOEXEC=3
     
     echo "$BC_C9_NAME: Runing BreatheCode Autoexec #$BC_C9_AUTOEXEC"
     
@@ -18,7 +18,15 @@ if [ ! "$BC_C9_AUTOEXEC" = 2  ]; then
     read version _ <<< $(nvm current)
     if [[ "$version" == *"v6"* ]]; then
         nvm i 8
+        nvm alias default 8
         echo "$BC_C9_NAME: Node was upgraded to version 8"
+    fi
+
+    # Path to .pyenv
+    if [ -d ~/.pyenv ]; then
+        export PATH="/home/ubuntu/.pyenv/bin:$PATH"
+        eval "$(pyenv init -)"
+        eval "$(pyenv virtualenv-init -)"
     fi
 fi
 

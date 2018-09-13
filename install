@@ -27,6 +27,16 @@ else
     INSTALLED=1
 fi
 
+
+if [ -d ~/.pyenv ]; 
+    then 
+    echo "$BC_C9_NAME: pyenv already installed. skipping."
+    else
+    curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+    echo "$BC_C9_NAME: installing pyenv"
+fi
+
+
 if git config core.filemode; then
     git config core.filemode false
     git config --global core.fileMode false
