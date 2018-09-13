@@ -23,9 +23,11 @@ if [ ! "$BC_C9_AUTOEXEC" = 3  ]; then
     fi
 
     # Path to .pyenv
-    export PATH="/home/ubuntu/.pyenv/bin:$PATH"
-    eval "$(pyenv init -)"
-    eval "$(pyenv virtualenv-init -)"
+    if [ -d ~/.pyenv ]; then
+        export PATH="/home/ubuntu/.pyenv/bin:$PATH"
+        eval "$(pyenv init -)"
+        eval "$(pyenv virtualenv-init -)"
+    fi
 fi
 
 # Functions
