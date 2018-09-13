@@ -30,9 +30,10 @@ fi
 
 if [ -d ~/.pyenv ]; 
     then 
-    echo "Pyenv already installed. skipping."
+    echo "$BC_C9_NAME: pyenv already installed. skipping."
     else
     curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
+    echo "$BC_C9_NAME: installing pyenv"
 fi
 
 
