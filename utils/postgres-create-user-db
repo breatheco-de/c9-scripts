@@ -14,7 +14,7 @@ read PG_USER
 echo -n "Password: "
 read PG_PASS
 
-echo -n "Database: "
+echo -n "Database name: "
 read PG_DB
 
 echo -n "Encoding [UTF-8]: "
