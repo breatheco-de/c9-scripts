@@ -2,8 +2,8 @@
     name: 'c9Scripts',
     debug: true,
     init: function() {
-        //this.doInstallOrUpgradeIfHostedWorkspace(this);
-        this.runScripts(this);
+        this.doInstallOrUpgradeIfHostedWorkspace(this);
+        //this.runScripts(this);
     },
     runScripts(self){
         self.console.log(self,'runScripts');
