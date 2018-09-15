@@ -1,1 +1,148 @@
-({name:"c9Scripts",debug:!0,init:function(){this.runScripts(this)},runScripts:o=>(o.console.log(o,"runScripts"),new Promise((e,r)=>{services.fs.readFile("~/c9-scripts/scripts/get-scripts.js",(e,l)=>{if(e)o.onError(o,e),r();else{new Function(l)().forEach(e=>services.fs.readFile("~/c9-scripts/scripts/"+e+".js",(e,l)=>{if(e)o.onError(o,e),r();else{new Function(l)()(o,services,plugin)}}))}})})),git:{getClone:function(o){return"/home/ubuntu/c9-scripts"},getRemote:function(o){return"https://github.com/breatheco-de/c9-scripts.git"}},console:{getPrefix:function(o){return"["+o.name+"]"},log:function(o,e){console.log.apply(console,[o.console.getPrefix(o)].concat(e))},error:function(o,e){console.error.apply(console,[o.console.getPrefix(o)].concat(e))}},notification:{error:(o,e)=>services["dialog.error"].show(e),info:(o,e)=>services["dialog.alert"].show(e)},onError:function(o,e){o.console.error(o,e),o.notification.error(o,o.name+" failed: "+e.message)},doInstallOrUpgradeIfHostedWorkspace:function(o){o.console.log(o,"doInstallOrUpgradeIfHostedWorkspace"),services.proc.execFile("sh",{args:["-c",'echo -n "$C9_HOSTNAME"'],cwd:"/"},(e,r,l)=>o.doInstallOrUpgradeIfHostedWorkspaceCallback(o,e,r,l))},doInstallOrUpgradeIfHostedWorkspaceCallback:function(o,e,r,l){if(o.console.log(o,"doInstallOrUpgradeIfHostedWorkspaceCallback"),e)return o.onError(o,e);r.endsWith(".c9users.io")&&o.doInstallOrUpgrade(o)},doInstallOrUpgrade:function(o){o.console.log(o,"doInstallOrUpgrade"),services.proc.execFile("test",{args:["-d",o.git.getClone()],cwd:"/"},(e,r,l)=>o.doInstallOrUpgradeCallback(o,e,r,l))},doInstallOrUpgradeCallback:function(o,e,r,l){o.console.log(o,"doInstallOrUpgradeCallback"),e&&1==e.code?o.doClone(o):e?o.onError(o,e):o.doUpgrade(o)},doClone:function(o,e){o.console.log(o,"doClone"),services.proc.execFile("git",{args:["clone",o.git.getRemote(),o.git.getClone()],cwd:"/"},e=>o.doCloneCallback(o,e))},doCloneCallback:function(o,e){if(o.console.log(o,"doCloneCallback"),e)return o.onError(o,e);o.doInstall(o)},doUpgrade:function(o){o.console.log(o,"doUpgrade"),services.proc.execFile("git",{args:["pull"],cwd:o.git.getClone()},e=>o.doUpgradeCallback(o,e))},doUpgradeCallback:function(o,e){if(o.console.log(o,"doUpgradeCallback"),e)return o.onError(o,e);o.doInstall(o)},doInstall:function(o){o.console.log(o,"doInstall"),services.proc.execFile("bash",{args:["./install"],cwd:o.git.getClone()},(e,r)=>o.doInstallCallback(o,e,r))},doInstallCallback:function(o,e,r){if(o.console.log(o,"doInstallCallback"),e)return o.onError(o,e);this.runScripts(o)}}).init();
+({
+    name: 'c9Scripts',
+    debug: true,
+    init: function() {
+        this.doInstallOrUpgradeIfHostedWorkspace(this);
+        //this.runScripts(this);
+    },
+    runScripts(self){
+        self.console.log(self,'runScripts');
+        return new Promise((resolve, reject) => {
+            const rootPath = '~/c9-scripts';
+            services.fs.readFile(rootPath+"/scripts/get-scripts.js", (err, data) => {
+                if (err){
+                    self.onError(self, err);
+                    reject();
+                } 
+                else{
+                    const scripts = new Function(data)();
+                    scripts.forEach((script) => services.fs.readFile(rootPath+'/scripts/'+script+".js", (err, data) => {
+                            if (err){
+                                self.onError(self, err);
+                                reject();
+                            } 
+                            else{
+                                const script = new Function(data)();
+                                script(self, services, plugin);
+                            }
+                        })
+                    );
+                }
+            });
+        });
+    },
+    git: {
+        getClone: function(self) {
+            return '/home/ubuntu/c9-scripts';
+        },
+        getRemote: function(self) {
+            return 'https://github.com/breatheco-de/c9-scripts.git';
+        }
+    },
+    console: {
+        getPrefix: function(self) {
+            return '[' + self.name + ']';
+        },
+        log: function(self, args) {
+            console.log.apply(console, [self.console.getPrefix(self)].concat(args));
+        },
+        error: function(self, args) {
+            console.error.apply(console, [self.console.getPrefix(self)].concat(args));
+        }
+    },
+    notification: {
+        error: (self, err) => services['dialog.error'].show(err),
+        info: (self, msg) => services['dialog.alert'].show(msg)
+    },
+    onError: function(self, err) {
+        self.console.error(self, err);
+        self.notification.error(self, self.name + ' failed: ' + err.message);
+    },
+    doInstallOrUpgradeIfHostedWorkspace: function(self) {
+        self.console.log(self, 'doInstallOrUpgradeIfHostedWorkspace');
+
+        services.proc.execFile('sh', {
+            args: ['-c', 'echo -n "$C9_HOSTNAME"'], cwd: '/'
+        }, (err, stdout, stderr) => self.doInstallOrUpgradeIfHostedWorkspaceCallback(self, err, stdout, stderr));
+    },
+    doInstallOrUpgradeIfHostedWorkspaceCallback: function(self, err, stdout, stderr) {
+        self.console.log(self, 'doInstallOrUpgradeIfHostedWorkspaceCallback');
+
+        if (err) {
+            return self.onError(self, err);
+        }
+
+        if (stdout.endsWith('.c9users.io')) {
+            self.doInstallOrUpgrade(self);
+        }
+    },
+    doInstallOrUpgrade: function(self) {
+        self.console.log(self, 'doInstallOrUpgrade');
+
+        services.proc.execFile('test', {
+            args: ['-d', self.git.getClone()], cwd: '/'
+        }, (err, stdout, stderr) => self.doInstallOrUpgradeCallback(self, err, stdout, stderr));
+    },
+    doInstallOrUpgradeCallback: function(self, err, stdout, stderr) {
+        self.console.log(self, 'doInstallOrUpgradeCallback');
+
+        if (err && (err.code == 1)) {
+            // not installed
+            self.doClone(self);
+        } else if (err) {
+            // error
+            self.onError(self, err);
+        } else {
+            // installed
+            self.doUpgrade(self);
+        }
+    },
+    doClone: function(self, callback) {
+        self.console.log(self, 'doClone');
+
+        services.proc.execFile('git', {
+            args: ['clone', self.git.getRemote(), self.git.getClone()], cwd: '/'
+        }, (err) => self.doCloneCallback(self, err));
+    },
+    doCloneCallback: function(self, err) {
+        self.console.log(self, 'doCloneCallback');
+
+        if (err) {
+            return self.onError(self, err);
+        }
+
+        self.doInstall(self);
+    },
+    doUpgrade: function(self) {
+        self.console.log(self, 'doUpgrade');
+
+        services.proc.execFile('git', {
+            args: ['pull'], cwd: self.git.getClone()
+        }, (err) => self.doUpgradeCallback(self, err));
+    },
+    doUpgradeCallback: function(self, err) {
+        self.console.log(self, 'doUpgradeCallback');
+
+        if (err) {
+            return self.onError(self, err);
+        }
+
+        self.doInstall(self);
+    },
+    doInstall: function(self) {
+        self.console.log(self, 'doInstall');
+
+        services.proc.execFile('bash', {
+            args: ['./install'], cwd: self.git.getClone()
+        }, (err, stdout) => self.doInstallCallback(self, err, stdout));
+    },
+    doInstallCallback: function(self, err, stdout) {
+        self.console.log(self, 'doInstallCallback');
+        //self.console.log(self, stdout);
+        if (err) {
+            return self.onError(self, err);
+        }
+        
+        this.runScripts(self);
+    }
+}).init();
