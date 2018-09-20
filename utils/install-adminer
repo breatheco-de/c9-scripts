@@ -17,6 +17,9 @@ PORT="$(find-free-port)" || exit 1
 find-free-port -a | while read port; do sed "s/$port/$PORT/" -i /etc/apache2/ports.conf; done || exit 1
 find-free-port -a | while read port; do sed "s/$port/$PORT/" -i /etc/apache2/sites-available/001-cloud9.conf; done || exit 1
 
+# install phpmyadmin, restart apache2
+phpmyadmin-ctl install | sed "s/.c9users.io/.c9users.io:$PORT/" || exit 1
+
 # get adminer
 wget 'https://www.adminer.org/latest.php' -O /usr/share/phpmyadmin/adminer.php || exit 1
 
